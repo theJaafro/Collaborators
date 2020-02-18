@@ -98,7 +98,7 @@ print(NodeStateDict)
 # ---Apply actions to blank tile to generate new nodes---
 ParentNode = Node_Index_i
 NodeIndex = ParentNode
-NodeState = Node_State_i
+NodeState = Node_State_i.copy()
 
 # Move left
 
@@ -108,10 +108,10 @@ print('node index')
 print(NodeIndex)
 print('MOVE LEFT')
 
-[NewNodeState, stateChange] = ActionMoveLeft(NodeState)
+[NewNodeState1, stateChange] = ActionMoveLeft(NodeState)
 
-print('new node state')
-print(NewNodeState)
+print('new node state1')
+print(NewNodeState1)
 print('state change')
 print(stateChange)
 
@@ -119,12 +119,12 @@ if stateChange == 1:
 # ---Check if node already exists in the data structure and add to dictionary---
     repeat = 0
     for value in NodeStateDict:
-        if value == NewNodeState:
+        if value == NewNodeState1:
             repeat = 1
 
     if repeat == 0:
         NodeIndex += 1
-        NodeStateDict[NodeIndex] = (NewNodeState, ParentNode)
+        NodeStateDict[NodeIndex] = (NewNodeState1, ParentNode)
 
     print('repeat')
     print(repeat)
@@ -140,10 +140,10 @@ print('node index')
 print(NodeIndex)
 print('MOVE RIGHT')
 
-[NewNodeState, stateChange] = ActionMoveRight(NodeState)
+[NewNodeState2, stateChange] = ActionMoveRight(NodeState.copy())
 
-print('new node state')
-print(NewNodeState)
+print('new node state2')
+print(NewNodeState2)
 print('state change')
 print(stateChange)
 
@@ -151,12 +151,12 @@ if stateChange == 1:
     NodeIndex += 1
     repeat = 0
     for value in NodeStateDict:
-        if value == NewNodeState:
+        if value == NewNodeState2:
             repeat = 1
 
     if repeat == 0:
         NodeIndex += 1
-        NodeStateDict[NodeIndex] = (NewNodeState, ParentNode)
+        NodeStateDict[NodeIndex] = (NewNodeState2, ParentNode)
 
     print('repeat')
     print(repeat)
