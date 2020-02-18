@@ -1,10 +1,5 @@
 import numpy as np
 
-# Parameters
-Node_State_i = [[1, 2, 0],[4, 5, 6],[8, 3, 7]]
-Node_Index_i = 0
-Parent_Note_Index_i = 0
-
 # Functions
 def BlankTileLocation(CurrentNode):
     """Finds location of blank tile
@@ -22,19 +17,10 @@ def BlankTileLocation(CurrentNode):
         i += 1
     return [blank_i,blank_j];
 
-# TESTING
-print('FINDING BLANK TILE LOCATION TEST')
-print(Node_State_i)
-[i,j] = BlankTileLocation(Node_State_i)
-print(i,j)
-# END TESTING
-
 def ActionMoveLeft(CurrentNode):
     """Move tile LEFT, if possible"""
     NewNode = CurrentNode
     [i,j] = BlankTileLocation(CurrentNode)
-    print('while moving left, here is the blank tile location before moving')
-    print(i,j)
     stateChange = 0
     if j != 1:
         i -= 1
@@ -46,51 +32,25 @@ def ActionMoveLeft(CurrentNode):
         stateChange = 1
     return NewNode, stateChange;
 
-# TESTING
-print('MOVING TILE LEFT, IF POSSIBLE, TEST')
-print(Node_State_i)
-[Node_State_i, stateChange] = ActionMoveLeft(Node_State_i)
-print(Node_State_i)
-print(stateChange)
-# END TESTING
-
-def ActionMoveRight(CurrentNode, nodeStateDict):
+def ActionMoveRight(CurrentNode):
     """Move tile RIGHT, if possible"""
-    print(nodeStateDict)
     NewNode = CurrentNode
-    print(nodeStateDict)
     [i,j] = BlankTileLocation(CurrentNode)
-    print(nodeStateDict)
-    print('while moving right, here is the blank tile location before moving')
-    print(i,j)
     stateChange = 0
-    print(nodeStateDict)
-    print('start')
     if j != 3:
         i -= 1
-        print(nodeStateDict)
         j -= 1
-        print(nodeStateDict)
         j_right = j + 1
-        print(nodeStateDict)
         numTile = CurrentNode[i][j_right]
-        print(nodeStateDict)
         NewNode[i][j] = numTile
-        print(nodeStateDict)
         NewNode[i][j_right] = 0
-        print(nodeStateDict)
         stateChange = 1
-        print(nodeStateDict)
-    print('END')
-    print(nodeStateDict)
-    return NewNode, stateChange, nodeStateDict;
+    return NewNode, stateChange;
 
 def ActionMoveUp(CurrentNode):
      """Move tile UP, if possible"""
      NewNode = CurrentNode
      [i,j] = BlankTileLocation(CurrentNode)
-     print('while moving up, here is the blank tile location before moving')
-     print(i,j)
      stateChange = 0
      if i != 1:
          i -= 1
@@ -102,20 +62,10 @@ def ActionMoveUp(CurrentNode):
          stateChange = 1
      return NewNode, stateChange;
 
-# TESTING
-print('MOVING TILE UP, IF POSSIBLE, TEST')
-print(Node_State_i)
-[Node_State_i, stateChange] = ActionMoveUp(Node_State_i)
-print(Node_State_i)
-print(stateChange)
-# END TESTING
-
 def ActionMoveDown(CurrentNode):
      """Move tile DOWN, if possible"""
      NewNode = CurrentNode
      [i,j] = BlankTileLocation(CurrentNode)
-     print('while moving down, here is the blank tile location before moving')
-     print(i,j)
      stateChange = 0
      if i != 3:
          i -= 1
@@ -127,94 +77,109 @@ def ActionMoveDown(CurrentNode):
          stateChange = 1
      return NewNode, stateChange;
 
-# TESITNG
-print('MOVING TILE DOWN, IF POSSIBLE, TEST')
-print(Node_State_i)
-[Node_State_i, stateChange] = ActionMoveDown(Node_State_i)
-print(Node_State_i)
-print(stateChange)
-# END TESTING
+# ===START===
 
-def NewNode(NewNodeIndex, NewNode, nodeStateDict):
-     """Adds new node to dictionary,
-        checks whether node is new or not"""
-     repeat = 0
-     print('START NEW NODE FUNCTION ')
-     print('repeat value ' + str(repeat))
-     print('new node index ' + str(NewNodeIndex))
-     print('new node ' + str(NewNode))
-     print('dict ' + str(nodeStateDict))
-     if NewNode in nodeStateDict.values() == True:
-         repeat = 1
-         print('REPEAT EXISTS')
-         print(repeat)
-     else:
-         print('NO REPEATS')
-         nodeStateDict[NewNodeIndex] = NewNode
-         NewNodeIndex += 1
-     print(nodeStateDict)
-     print(NewNodeIndex)
-     dictUpdate = {NewNodeIndex: NewNode}
-     print('END NEW NODE FUNCTION')
-     return dictUpdate
-
-# GENERATING GRAPH
-print('\n===GENERATATE GRAPH===\n')
-# PARAMETERS
+# ---Get the initial node from the user---
 Node_State_i = [[1, 2, 3],[4, 5, 6],[0, 7, 8]]
+
+print('initial node state')
+print(Node_State_i)
+
+# ---Save node information using a dictionary---
+# Key is node number and Value is a tuple of node state and parent node
+NodeStateDict = dict()
 Node_Index_i = 1
 Parent_Node_Index_i = 1
-Node_Goal = [[1, 2, 3],[4, 5, 6],[7, 8, 0]]
-# DICTIONARIES
-# DICTIONARY THAT SAVES KEY NODE INDEX AND VALUE STATE
-nodeStateDict = {}
-nodeStateDict[Node_Index_i] = Node_State_i
-print(nodeStateDict)
-# DICTIONARY THAT SAVES KEY NODE INDEX AND VALUE PARENT NODE
-parentNodeDict = {}
-parentNodeDict[Node_Index_i] = Parent_Node_Index_i
-print(parentNodeDict)
-print('Current node state ' + str(Node_State_i) + '\n')
-# TREE GRAPH
-# !!! RIGHT NOW, DICTIONARY IS LINKED TO A VARIABLE THAT UPDATES, SO THE DICIONARY VALUES ARE CHANGING WITH THE VARIABLE !!!
-Node_Index = Node_Index_i + 1
-Node_State = Node_State_i
-while Node_State != Node_Goal:
-    print(nodeStateDict)
-    print('Move left')
-    print(nodeStateDict)
-    print(nodeStateDict)
-    print(nodeStateDict)
-    [NewNode_State, stateChange, NEWnodeStateDict] = ActionMoveRight(Node_State, nodeStateDict)
-    print(nodeStateDict)
-    print(nodeStateDict)
-    print(nodeStateDict)
-    print(NewNode_State)
-    print(stateChange)
-    print(nodeStateDict)
-    if stateChange == 0:
-        print('no change')
-    print(NewNode_State)
-    print(nodeStateDict)
-    nodeStateDict.update(NewNode(Node_Index, NewNode_State, nodeStateDict))
+NodeStateDict[Node_Index_i] = (Node_State_i, Parent_Node_Index_i)
+
+print('initial dictionary')
+print(NodeStateDict)
+
+# ---Apply actions to blank tile to generate new nodes---
+ParentNode = Node_Index_i
+NodeIndex = ParentNode
+NodeState = Node_State_i
+
+# Move left
+
+print('parent node')
+print(ParentNode)
+print('node index')
+print(NodeIndex)
+print('MOVE LEFT')
+
+[NewNodeState, stateChange] = ActionMoveLeft(NodeState)
+
+print('new node state')
+print(NewNodeState)
+print('state change')
+print(stateChange)
+
+if stateChange == 1:
+# ---Check if node already exists in the data structure and add to dictionary---
+    repeat = 0
+    for value in NodeStateDict:
+        if value == NewNodeState:
+            repeat = 1
+
+    if repeat == 0:
+        NodeIndex += 1
+        NodeStateDict[NodeIndex] = (NewNodeState, ParentNode)
+
+    print('repeat')
+    print(repeat)
+
+print('new dictionary')
+print(NodeStateDict)
+
+# Move right
+
+print('parent node')
+print(ParentNode)
+print('node index')
+print(NodeIndex)
+print('MOVE RIGHT')
+
+[NewNodeState, stateChange] = ActionMoveRight(NodeState)
+
+print('new node state')
+print(NewNodeState)
+print('state change')
+print(stateChange)
+
+if stateChange == 1:
+    NodeIndex += 1
+    repeat = 0
+    for value in NodeStateDict:
+        if value == NewNodeState:
+            repeat = 1
+
+    if repeat == 0:
+        NodeIndex += 1
+        NodeStateDict[NodeIndex] = (NewNodeState, ParentNode)
+
+    print('repeat')
+    print(repeat)
+
+print('new dictionary') #DICTIONARY IS UPDATING PREVIOUS ENTRIES WITH THE NEW ONE INSTEAD OF LEAVING IT ALONE...
+print(NodeStateDict)
+
+# Move up
+[NewNodeState, stateChange] = ActionMoveUp(NodeState)
+
+# Move down
+[NewNodeState, stateChange] = ActionMoveDown(NodeState)
 
 
-    # print('Move right')
-    # [Node_State_i, stateChange] = ActionMoveRight(Node_State_i)
-    # if stateChange == 0:
-    #     print('no change')
-    # print(Node_State_i)
-    # print('Move up')
-    # [Node_State_i, stateChange] = ActionMoveUp(Node_State_i)
-    # if stateChange == 0:
-    #     print('no change')
-    # print(Node_State_i)
-    # print('Move down')
-    # [Node_State_i, stateChange] = ActionMoveDown(Node_State_i)
-    # if stateChange == 0:
-    #     print('no change')
-    # print(Node_State_i)
-print('===END===\n\n')
+
+
+# ---Check if the new node meets the goal node---
+
+# ---Back track to find the path---
+
+# ---Print path---
+
+# ===END===
 
 
 # def generate_path():
