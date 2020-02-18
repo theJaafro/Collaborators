@@ -54,30 +54,36 @@ print(Node_State_i)
 print(stateChange)
 # END TESTING
 
-def ActionMoveRight(CurrentNode):
+def ActionMoveRight(CurrentNode, nodeStateDict):
     """Move tile RIGHT, if possible"""
+    print(nodeStateDict)
     NewNode = CurrentNode
+    print(nodeStateDict)
     [i,j] = BlankTileLocation(CurrentNode)
+    print(nodeStateDict)
     print('while moving right, here is the blank tile location before moving')
     print(i,j)
     stateChange = 0
+    print(nodeStateDict)
+    print('start')
     if j != 3:
         i -= 1
+        print(nodeStateDict)
         j -= 1
+        print(nodeStateDict)
         j_right = j + 1
+        print(nodeStateDict)
         numTile = CurrentNode[i][j_right]
+        print(nodeStateDict)
         NewNode[i][j] = numTile
+        print(nodeStateDict)
         NewNode[i][j_right] = 0
+        print(nodeStateDict)
         stateChange = 1
-    return NewNode, stateChange;
-
-# TESTING
-print('MOVING TILE RIGHT, IF POSSIBLE, TEST')
-print(Node_State_i)
-[Node_State_i, stateChange] = ActionMoveRight(Node_State_i)
-print(Node_State_i)
-print(stateChange)
-# END TESTING
+        print(nodeStateDict)
+    print('END')
+    print(nodeStateDict)
+    return NewNode, stateChange, nodeStateDict;
 
 def ActionMoveUp(CurrentNode):
      """Move tile UP, if possible"""
@@ -148,8 +154,9 @@ def NewNode(NewNodeIndex, NewNode, nodeStateDict):
          NewNodeIndex += 1
      print(nodeStateDict)
      print(NewNodeIndex)
+     dictUpdate = {NewNodeIndex: NewNode}
      print('END NEW NODE FUNCTION')
-     return nodeStateDict, NewNodeIndex
+     return dictUpdate
 
 # GENERATING GRAPH
 print('\n===GENERATATE GRAPH===\n')
@@ -172,15 +179,24 @@ print('Current node state ' + str(Node_State_i) + '\n')
 # !!! RIGHT NOW, DICTIONARY IS LINKED TO A VARIABLE THAT UPDATES, SO THE DICIONARY VALUES ARE CHANGING WITH THE VARIABLE !!!
 Node_Index = Node_Index_i + 1
 Node_State = Node_State_i
-while Node_State_i != Node_Goal:
+while Node_State != Node_Goal:
     print(nodeStateDict)
     print('Move left')
-    [Node_State, stateChange] = ActionMoveRight(Node_State)
+    print(nodeStateDict)
+    print(nodeStateDict)
+    print(nodeStateDict)
+    [NewNode_State, stateChange, NEWnodeStateDict] = ActionMoveRight(Node_State, nodeStateDict)
+    print(nodeStateDict)
+    print(nodeStateDict)
+    print(nodeStateDict)
+    print(NewNode_State)
+    print(stateChange)
+    print(nodeStateDict)
     if stateChange == 0:
         print('no change')
-    print(Node_State)
+    print(NewNode_State)
     print(nodeStateDict)
-    [nodeStateDict, Node_Index] = NewNode(Node_Index, Node_State, nodeStateDict)
+    nodeStateDict.update(NewNode(Node_Index, NewNode_State, nodeStateDict))
 
 
     # print('Move right')
