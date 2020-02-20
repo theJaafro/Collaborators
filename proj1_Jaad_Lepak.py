@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 # Functions
 def BlankTileLocation(CurrentNode):
@@ -19,8 +20,8 @@ def BlankTileLocation(CurrentNode):
 
 def ActionMoveLeft(CurrentNode):
     """Move tile LEFT, if possible"""
-    NewNode = CurrentNode
-    [i,j] = BlankTileLocation(CurrentNode)
+    NewNode = copy.deepcopy(CurrentNode)
+    [i,j] = BlankTileLocation(CurrentNode[:])
     stateChange = 0
     if j != 1:
         i -= 1
@@ -30,12 +31,12 @@ def ActionMoveLeft(CurrentNode):
         NewNode[i][j] = numTile
         NewNode[i][j_left] = 0
         stateChange = 1
-    return NewNode, stateChange;
+    return NewNode[:], stateChange;
 
 def ActionMoveRight(CurrentNode):
     """Move tile RIGHT, if possible"""
-    NewNode = CurrentNode
-    [i,j] = BlankTileLocation(CurrentNode)
+    NewNode = copy.deepcopy(CurrentNode)
+    [i,j] = BlankTileLocation(CurrentNode[:])
     stateChange = 0
     if j != 3:
         i -= 1
@@ -45,12 +46,12 @@ def ActionMoveRight(CurrentNode):
         NewNode[i][j] = numTile
         NewNode[i][j_right] = 0
         stateChange = 1
-    return NewNode, stateChange;
+    return NewNode[:], stateChange;
 
 def ActionMoveUp(CurrentNode):
      """Move tile UP, if possible"""
-     NewNode = CurrentNode
-     [i,j] = BlankTileLocation(CurrentNode)
+     NewNode = copy.deepcopy(CurrentNode)
+     [i,j] = BlankTileLocation(CurrentNode[:])
      stateChange = 0
      if i != 1:
          i -= 1
@@ -60,12 +61,12 @@ def ActionMoveUp(CurrentNode):
          NewNode[i][j] = numTile
          NewNode[i_up][j] = 0
          stateChange = 1
-     return NewNode, stateChange;
+     return NewNode[:], stateChange;
 
 def ActionMoveDown(CurrentNode):
      """Move tile DOWN, if possible"""
-     NewNode = CurrentNode
-     [i,j] = BlankTileLocation(CurrentNode)
+     NewNode = copy.deepcopy(CurrentNode)
+     [i,j] = BlankTileLocation(CurrentNode[:])
      stateChange = 0
      if i != 3:
          i -= 1
@@ -75,114 +76,140 @@ def ActionMoveDown(CurrentNode):
          NewNode[i][j] = numTile
          NewNode[i_down][j] = 0
          stateChange = 1
-     return NewNode, stateChange;
+     return NewNode[:], stateChange;
+
+def NewNode(stateChange, newNode, nodeStates, nodeIndexs, parentNodes, count,\
+ index, parent):
+    """Inserts new node,
+        if blank tile moves and node has not been visited"""
+    if stateChange == 1:
+        repeat = 0
+        if newNode in nodeStates == True:
+            repeat = 1
+
+        if repeat == 0:
+            count += 1
+            index += 1
+            nodeStates.append(newNode)
+            nodeIndexs.append(index)
+            parentNodes.append(parent)
+    return nodeStates, nodeIndexs, parentNodes, count, index;
+
+def generatePath(nodeStates, nodeIndexs, nodeParents):
+    """Backtracks from final node to initial node"""
+    states = nodeStates[::-1]
+    indexs = nodeIndexs[::-1]
+    parents = nodeParents[::-1]
+    finalNode = states[0]
+    print('FINAL NODE')
+    print(finalNode)
+    initialNode = states[-1]
+    print('INITIAL NODE')
+    print(initialNode)
+    print('PATH')
+    # i = parents[0]
+    # j = indexs[0]
+    # for i < j:
+    #     if
 
 # ===START===
 
 # ---Get the initial node from the user---
-Node_State_i = [[1, 2, 3],[4, 5, 6],[0, 7, 8]]
+initialNode = [[1, 2, 3],[4, 5, 6],[7, 0, 8]]
+goalNode = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
-print('initial node state')
+# ---Save node information using a data structure---
+# The data structure chosen are lists
+Node_State_i = []
+Node_Index_i = [1]
+Parent_Node_Index_i = [1]
+counter = 0
+indexCounter = 1
+parentCounter = 1
+
+Node_State_i.append(initialNode[:])
+
+print('BEGIN')
 print(Node_State_i)
-
-# ---Save node information using a dictionary---
-# Key is node number and Value is a tuple of node state and parent node
-NodeStateDict = dict()
-Node_Index_i = 1
-Parent_Node_Index_i = 1
-NodeStateDict[Node_Index_i] = (Node_State_i, Parent_Node_Index_i)
-
-print('initial dictionary')
-print(NodeStateDict)
+print(Node_Index_i)
+print(Parent_Node_Index_i)
+cont = 'y'
 
 # ---Apply actions to blank tile to generate new nodes---
-ParentNode = Node_Index_i
-NodeIndex = ParentNode
-NodeState = Node_State_i.copy()
+# Check if the new node meets the goal node
+while cont == 'y':
+    # Move left
+    print('MOVE LEFT')
+    parent = parentCounter - 1
+    [NewNodeState, stateChange] = ActionMoveLeft(Node_State_i[parent])
 
-# Move left
+    # ---Check if node already exists in the data structure and add to data structure---
+    [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
+    NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
+    Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-print('parent node')
-print(ParentNode)
-print('node index')
-print(NodeIndex)
-print('MOVE LEFT')
+    print(Node_State_i)
+    print(Node_Index_i)
+    print(Parent_Node_Index_i)
 
-[NewNodeState1, stateChange] = ActionMoveLeft(NodeState)
+    if Node_State_i[counter] == goalNode:
+        print('SUCCESS!')
+        break
 
-print('new node state1')
-print(NewNodeState1)
-print('state change')
-print(stateChange)
+    # Move right
+    print('MOVE RIGHT')
+    [NewNodeState, stateChange] = ActionMoveRight(Node_State_i[parent])
 
-if stateChange == 1:
-# ---Check if node already exists in the data structure and add to dictionary---
-    repeat = 0
-    for value in NodeStateDict:
-        if value == NewNodeState1:
-            repeat = 1
+    [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
+    NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
+    Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-    if repeat == 0:
-        NodeIndex += 1
-        NodeStateDict[NodeIndex] = (NewNodeState1, ParentNode)
+    print(Node_State_i)
+    print(Node_Index_i)
+    print(Parent_Node_Index_i)
 
-    print('repeat')
-    print(repeat)
+    if Node_State_i[counter] == goalNode:
+        print('SUCCESS!')
+        break
 
-print('new dictionary')
-print(NodeStateDict)
+    # Move up
+    print('MOVE UP')
+    [NewNodeState, stateChange] = ActionMoveUp(Node_State_i[parent])
 
-# Move right
+    [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
+    NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
+    Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-print('parent node')
-print(ParentNode)
-print('node index')
-print(NodeIndex)
-print('MOVE RIGHT')
+    print(Node_State_i)
+    print(Node_Index_i)
+    print(Parent_Node_Index_i)
 
-[NewNodeState2, stateChange] = ActionMoveRight(NodeState.copy())
+    if Node_State_i[counter] == goalNode:
+        print('SUCCESS!')
+        break
 
-print('new node state2')
-print(NewNodeState2)
-print('state change')
-print(stateChange)
+    # Move down
+    print('MOVE DOWN')
+    [NewNodeState, stateChange] = ActionMoveDown(Node_State_i[parent])
 
-if stateChange == 1:
-    NodeIndex += 1
-    repeat = 0
-    for value in NodeStateDict:
-        if value == NewNodeState2:
-            repeat = 1
+    [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
+    NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
+    Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-    if repeat == 0:
-        NodeIndex += 1
-        NodeStateDict[NodeIndex] = (NewNodeState2, ParentNode)
+    print(Node_State_i)
+    print(Node_Index_i)
+    print(Parent_Node_Index_i)
 
-    print('repeat')
-    print(repeat)
+    if Node_State_i[counter] == goalNode:
+        print('SUCCESS!')
+        break
 
-print('new dictionary') #DICTIONARY IS UPDATING PREVIOUS ENTRIES WITH THE NEW ONE INSTEAD OF LEAVING IT ALONE...
-print(NodeStateDict)
+    parentCounter =+ 1
+    cont = input('Continue?')
 
-# RECOMMENDED DATA STRUCTURE IS TO ONLY MAKE LISTS.
-# ONE LIST SAVES THE PARENT NODES.
-# ANOTHER LIST SAVES THE CHILD NODE.
-# THIRD LIST SAVES THE NODE STATES. ACCESS BY NODESTATE[0][0]...
-# FOR LISTS, WHEN YOU ASSIGN A VARIABLE TO A NEW VARIABLE, USE x = y[:] TO MAKE A COPY.
-
-
-# Move up
-[NewNodeState, stateChange] = ActionMoveUp(NodeState)
-
-# Move down
-[NewNodeState, stateChange] = ActionMoveDown(NodeState)
-
-
-
-
-# ---Check if the new node meets the goal node---
 
 # ---Back track to find the path---
+generatePath(Node_State_i, Node_Index_i, Parent_Node_Index_i)
 
 # ---Print path---
 
