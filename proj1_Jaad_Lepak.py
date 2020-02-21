@@ -1,7 +1,9 @@
 import numpy as np
 import copy
+import os
 
 # Functions
+    
 def BlankTileLocation(CurrentNode):
     """Finds location of blank tile
         Returns output as pair (i,j)
@@ -78,15 +80,27 @@ def ActionMoveDown(CurrentNode):
          stateChange = 1
      return NewNode[:], stateChange;
 
+def list2num(node):
+    """Converts a 3x3 array into one integer"""
+    n = 1e8
+    new = 0
+    for list in node:
+        for number in list:
+            new += number*n
+            n /= 10
+    return new;
+
 def NewNode(stateChange, newNode, nodeStates, nodeIndexs, parentNodes, count,\
  index, parent):
     """Inserts new node,
         if blank tile moves and node has not been visited"""
     if stateChange == 1:
         repeat = 0
-        if newNode in nodeStates == True:
-            repeat = 1
-
+        newNodeCheck = list2num(newNode)
+        for list in nodeStates:
+            check = list2num(copy.deepcopy(list))
+            if newNodeCheck == check:
+                repeat = 1
         if repeat == 0:
             count += 1
             index += 1
@@ -100,22 +114,47 @@ def generatePath(nodeStates, nodeIndexs, nodeParents):
     states = nodeStates[::-1]
     indexs = nodeIndexs[::-1]
     parents = nodeParents[::-1]
-    finalNode = states[0]
-    print('FINAL NODE')
-    print(finalNode)
+    finalNode = [states[0]]
     initialNode = states[-1]
-    print('INITIAL NODE')
-    print(initialNode)
-    print('PATH')
-    # i = parents[0]
-    # j = indexs[0]
-    # for i < j:
-    #     if
+    parent = parents[0]
+    child = indexs[0]
+    finalParent = [parent]
+    finalChild = [child]
+    while child > 1:
+        count = indexs.index(child)
+        finalNode.insert(0,states[count])
+        finalParent.insert(0,parents[count])
+        finalChild.insert(0,indexs[count])
+        child = parents[count]
+        if child == 1:
+            finalNode.insert(0,initialNode)
+            break
+    path = finalNode[:]
+    return path, finalChild, finalParent;
+
+def printPath(path, finalChild, finalParent):
+	"""Exports nodes to nodePath.txt as 1 2 3 4 5 6 7 8 0 on each new line
+	Exports child and parent nodes to NodesInfo.txt"""
+	os.remove('nodePath.txt')
+	pathFile = open('nodePath.txt','a')
+	for list in path:
+		for list in list:
+			for number in list:
+				pathFile.write(str(number) + ' ')
+		pathFile.write('\n')
+	pathFile.close()
+	os.remove('NodesInfo.txt')
+	nodeFile = open('NodesInfo.txt','a')
+	i = 0
+	for number in finalChild:
+		nodeFile.write(str(finalChild[i]) + ' ' + str(finalParent[i]) + '\n')
+		i += 1
+	nodeFile.close()
 
 # ===START===
 
 # ---Get the initial node from the user---
-initialNode = [[1, 2, 3],[4, 5, 6],[7, 0, 8]]
+initialNode = [[1, 8, 2], [0, 4, 3], [7, 6, 5]]
 goalNode = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
 # ---Save node information using a data structure---
@@ -129,122 +168,103 @@ parentCounter = 1
 
 Node_State_i.append(initialNode[:])
 
-print('BEGIN')
+print('NOW SOLVING FOR')
 print(Node_State_i)
-print(Node_Index_i)
-print(Parent_Node_Index_i)
-cont = 'y'
+print('\nCalculating...\n')
 
 # ---Apply actions to blank tile to generate new nodes---
 # Check if the new node meets the goal node
-while cont == 'y':
+while initialNode != goalNode:
+
     # Move left
-    print('MOVE LEFT')
     parent = parentCounter - 1
     [NewNodeState, stateChange] = ActionMoveLeft(Node_State_i[parent])
-
+    
     # ---Check if node already exists in the data structure and add to data structure---
     [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
     NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
     Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-    print(Node_State_i)
-    print(Node_Index_i)
-    print(Parent_Node_Index_i)
 
     if Node_State_i[counter] == goalNode:
-        print('SUCCESS!')
+        print('SUCCESS!\n')
         break
 
     # Move right
-    print('MOVE RIGHT')
     [NewNodeState, stateChange] = ActionMoveRight(Node_State_i[parent])
 
     [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
     NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
     Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-    print(Node_State_i)
-    print(Node_Index_i)
-    print(Parent_Node_Index_i)
 
     if Node_State_i[counter] == goalNode:
-        print('SUCCESS!')
+        print('SUCCESS!\n')
         break
 
     # Move up
-    print('MOVE UP')
     [NewNodeState, stateChange] = ActionMoveUp(Node_State_i[parent])
 
     [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
     NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
     Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-    print(Node_State_i)
-    print(Node_Index_i)
-    print(Parent_Node_Index_i)
 
     if Node_State_i[counter] == goalNode:
-        print('SUCCESS!')
+        print('SUCCESS!\n')
         break
 
     # Move down
-    print('MOVE DOWN')
     [NewNodeState, stateChange] = ActionMoveDown(Node_State_i[parent])
 
     [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
     NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
     Parent_Node_Index_i, counter, indexCounter, parentCounter)
 
-    print(Node_State_i)
-    print(Node_Index_i)
-    print(Parent_Node_Index_i)
 
     if Node_State_i[counter] == goalNode:
-        print('SUCCESS!')
+        print('SUCCESS!\n')
         break
 
-    parentCounter =+ 1
-    cont = input('Continue?')
+    if parentCounter % 100 == 0:
+        print('Still Calculating...\n')
+        if parentCounter % 500 == 0:
+                print('Puzzle may be unsolvable...\n')
+
+    parentCounter += 1
 
 
 # ---Back track to find the path---
-generatePath(Node_State_i, Node_Index_i, Parent_Node_Index_i)
+[finalNodes, finalChilds, finalParents] = generatePath(Node_State_i, Node_Index_i, Parent_Node_Index_i)
 
 # ---Print path---
-
-# ===END===
-
-
-# def generate_path():
-#     """Generates path by backtracking from
-#         final node to initial node"""
-
+printPath(finalNodes, finalChilds, finalParents)
+			       
 # Prewritten from plot_path.py
-# def print_matrix(state):
-#     counter = 0
-#     for row in range(0, len(state), 3):
-#         if counter == 0 :
-#             print("-------------")
-#         for element in range(counter, len(state), 3):
-#             if element <= counter:
-#                 print("|", end=" ")
-#             print(int(state[element]), "|", end=" ")
-#         counter = counter +1
-#         print("\n-------------")
-# # Prewritten from plot_path.py
-# fname = 'nodePath.txt'
-# data = np.loadtxt(fname)
-# if len(data[1]) is not 9:
-#     print("Format of the text file is incorrect, retry ")
-# else:
-#     for i in range(0, len(data)):
-#         if i == 0:
-#             print("Start Node")
-#         elif i == len(data)-1:
-#             print("Achieved Goal Node")
-#         else:
-#             print("Step ",i)
-#         print_matrix(data[i])
-#         print()
-#         print()
+def printMatrix(matrix):
+	"""Prints 8 puzzle to terminal"""
+	print('-------------')
+	print('| ' + str(int(matrix[0])) + ' | ' + str(int(matrix[1])) + ' | ' + str(int(matrix[2])) + ' |')
+	print('-------------')
+	print('| ' + str(int(matrix[3])) + ' | ' + str(int(matrix[4])) + ' | ' + str(int(matrix[5])) + ' |')
+	print('-------------')
+	print('| ' + str(int(matrix[6])) + ' | ' + str(int(matrix[7])) + ' | ' + str(int(matrix[8])) + ' |')
+	print('-------------')
+        
+# Prewritten from plot_path.py
+fname = 'nodePath.txt'
+data = np.loadtxt(fname)
+if len(data[1]) is not 9:
+    print("Format of the text file is incorrect, retry ")
+else:
+    for i in range(0, len(data)):
+        if i == 0:
+            print("Start Node")
+        elif i == len(data)-1:
+            print("Achieved Goal Node")
+        else:
+            print("Step ",i)
+        printMatrix(data[i])
+        print()
+        print()
+# ===END===
