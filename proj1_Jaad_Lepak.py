@@ -2,7 +2,34 @@ import numpy as np
 import copy
 import os
 
-# Functions
+# ENPM 661
+# JAAD LEPAK
+# 2020 02 21
+# PROJECT 1
+
+# ===== SECTION 1: INPUT =====
+# INPUT THE PUZZLE YOU WOULD LIKE TO SOLVE IN VARIABLE 'initialNode'
+# 
+# LIST MUST BE INSERTED IN COLUMN-BASED FORMAT
+#
+# EXAMPLE:
+# -------------
+# | 1 | 2 | 3 | 
+# -------------
+# | 4 | 5 | 6 | 
+# -------------
+# | 7 | 8 | 0 | 
+# -------------
+#
+# The puzzle above in list form is:
+# [[1, 4, 7], [2, 5, 8], [3, 6, 0]]
+#
+initialNode = [[1, 0, 7], [8, 4, 6], [2, 3, 5]]
+#
+# =============================
+
+
+# ===== SECTION 2: FUNCTIONS =====
     
 def BlankTileLocation(CurrentNode):
     """Finds location of blank tile
@@ -160,14 +187,13 @@ def printNode(node):
     nodeFile.close()
         
 
-# ===START===
+# ===== SECTION 3: EXPLORE =====
 
-# ---Get the initial node from the user---
-initialNode = [[1, 0, 7], [8, 4, 6], [2, 3, 5]]
+# Get the initial node from the user
 goalNode = [[1, 4, 7], [2, 5, 8], [3, 6, 0]]
 
 
-# ---Save node information using a data structure---
+# Save node information using a data structure
 # The data structure chosen are lists
 Node_State_i = []
 Node_Index_i = [1]
@@ -191,7 +217,7 @@ print('NOW SOLVING FOR')
 print(Node_State_i)
 print('\nCalculating...\n')
 
-# ---Apply actions to blank tile to generate new nodes---
+# Apply actions to blank tile to generate new nodes
 # Check if the new node meets the goal node
 while initialNode != goalNode:
 
@@ -199,7 +225,7 @@ while initialNode != goalNode:
     parent = parentCounter - 1
     [NewNodeState, stateChange] = ActionMoveLeft(Node_State_i[parent])
     
-    # ---Check if node already exists in the data structure and add to data structure---
+    # Check if node already exists in the data structure and add to data structure
     [Node_State_i, Node_Index_i, Parent_Node_Index_i, counter, indexCounter] = \
     NewNode(stateChange, NewNodeState, Node_State_i, Node_Index_i, \
     Parent_Node_Index_i, counter, indexCounter, parentCounter)
@@ -253,10 +279,11 @@ while initialNode != goalNode:
     parentCounter += 1
 
 
-# ---Back track to find the path---
+# Back track to find the path
 [finalNodes, finalChilds, finalParents] = generatePath(Node_State_i, Node_Index_i, Parent_Node_Index_i)
 
-# ---Print path---
+# ===== SECTION 4: PRINT =====
+# Print path
 printPath(finalNodes, finalChilds, finalParents)
 			       
 # Prewritten from plot_path.py
@@ -286,4 +313,4 @@ else:
         print_matrix(data[i])
         print()
         print()
-# ===END===
+# ===== END =====
