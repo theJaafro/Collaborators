@@ -1,5 +1,6 @@
 # ENPM661-Project1
 ### By Jaad Lepak
+### University of Maryland
 
 ## Overview
 Project 1 is a python script that solves the 8-matrix puzzle. The puzzle is solved by generating a tree graph and exploring each outcome as the blank tile is moved left, right, up, and down. Once the goal is reached, the script backtracks through the tree graph to reveal the steps required to solve the puzzle from start to finish. 
