@@ -107,6 +107,7 @@ def NewNode(stateChange, newNode, nodeStates, nodeIndexs, parentNodes, count,\
             nodeStates.append(newNode)
             nodeIndexs.append(index)
             parentNodes.append(parent)
+            printNode(newNode)
     return nodeStates, nodeIndexs, parentNodes, count, index;
 
 def generatePath(nodeStates, nodeIndexs, nodeParents):
@@ -133,29 +134,38 @@ def generatePath(nodeStates, nodeIndexs, nodeParents):
     return path, finalChild, finalParent;
 
 def printPath(path, finalChild, finalParent):
-	"""Exports nodes to nodePath.txt as 1 2 3 4 5 6 7 8 0 on each new line
-	Exports child and parent nodes to NodesInfo.txt"""
-	os.remove('nodePath.txt')
-	pathFile = open('nodePath.txt','a')
-	for list in path:
-		for list in list:
-			for number in list:
-				pathFile.write(str(number) + ' ')
-		pathFile.write('\n')
-	pathFile.close()
-	os.remove('NodesInfo.txt')
-	nodeFile = open('NodesInfo.txt','a')
-	i = 0
-	for number in finalChild:
-		nodeFile.write(str(finalChild[i]) + ' ' + str(finalParent[i]) + '\n')
-		i += 1
-	nodeFile.close()
+    """Exports nodes to nodePath.txt as '1 4 7 2 5 8 3 6 0' on each new line,
+    Exports child and parent nodes to NodesInfo.txt"""
+    pathFile = open('nodePath.txt','a')
+    for list in path:
+    	for list in list:
+    		for number in list:
+    			pathFile.write(str(number) + ' ')
+    	pathFile.write('\n')
+    pathFile.close()
+    nodeFile = open('NodesInfo.txt','a')
+    i = 0
+    for number in finalChild:
+    	nodeFile.write(str(finalChild[i]) + ' ' + str(finalParent[i]) + '\n')
+    	i += 1
+    nodeFile.close()
+
+def printNode(node):
+    """Exports explored node to Nodes.txt as '1 4 7 2 5 8 3 6 0' on each new line"""
+    nodeFile = open('Nodes.txt','a')
+    for list in node:
+        for number in list:
+            nodeFile.write(str(number) + ' ')
+    nodeFile.write('\n')
+    nodeFile.close()
+        
 
 # ===START===
 
 # ---Get the initial node from the user---
-initialNode = [[1, 8, 2], [0, 4, 3], [7, 6, 5]]
-goalNode = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+initialNode = [[1, 0, 7], [8, 4, 6], [2, 3, 5]]
+goalNode = [[1, 4, 7], [2, 5, 8], [3, 6, 0]]
+
 
 # ---Save node information using a data structure---
 # The data structure chosen are lists
@@ -168,6 +178,15 @@ parentCounter = 1
 
 Node_State_i.append(initialNode[:])
 
+# Remove any previously existing files
+if os.path.exists('Nodes.txt'):
+    os.remove('Nodes.txt')
+if os.path.exists('NodesInfo.txt'):
+    os.remove('NodesInfo.txt')
+if os.path.exists('nodePath.txt'):
+    os.remove('nodePath.txt')
+
+# Let the user know the program has started
 print('NOW SOLVING FOR')
 print(Node_State_i)
 print('\nCalculating...\n')
@@ -241,17 +260,17 @@ while initialNode != goalNode:
 printPath(finalNodes, finalChilds, finalParents)
 			       
 # Prewritten from plot_path.py
-def printMatrix(matrix):
-	"""Prints 8 puzzle to terminal"""
-	print('-------------')
-	print('| ' + str(int(matrix[0])) + ' | ' + str(int(matrix[1])) + ' | ' + str(int(matrix[2])) + ' |')
-	print('-------------')
-	print('| ' + str(int(matrix[3])) + ' | ' + str(int(matrix[4])) + ' | ' + str(int(matrix[5])) + ' |')
-	print('-------------')
-	print('| ' + str(int(matrix[6])) + ' | ' + str(int(matrix[7])) + ' | ' + str(int(matrix[8])) + ' |')
-	print('-------------')
-        
-# Prewritten from plot_path.py
+def print_matrix(state):
+    counter = 0
+    for row in range(0, len(state), 3):
+        if counter == 0 :
+            print("-------------")
+        for element in range(counter, len(state), 3):
+            if element <= counter:
+                print("|", end=" ")
+            print(int(state[element]), "|", end=" ")
+        counter = counter +1
+        print("\n-------------")
 fname = 'nodePath.txt'
 data = np.loadtxt(fname)
 if len(data[1]) is not 9:
@@ -264,7 +283,7 @@ else:
             print("Achieved Goal Node")
         else:
             print("Step ",i)
-        printMatrix(data[i])
+        print_matrix(data[i])
         print()
         print()
 # ===END===
