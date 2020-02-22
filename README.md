@@ -5,15 +5,15 @@
 Project 1 is a python script that solves the 8-matrix puzzle. The puzzle is solved by generating a tree graph and exploring each outcome as the blank tile is moved left, right, up, and down. Once the goal is reached, the script backtracks through the tree graph to reveal the steps required to solve the puzzle from start to finish. 
 Here is an example of the tree graph as the blank tile is moved left, up, and right:
 
-				2 8 3 
-				1 6 4
-				7 0 5
-			  /   |    \
+			2 8 3 
+			1 6 4
+			7 0 5
+	 	    /    |     \
 		2 8 3	2 8 3	2 8 3
 		1 6 4	1 0 4	1 6 4
 		0 7 5	7 6 5	7 5 0
-		
-		...		...		...
+	       /  |  \ /  |  \ /  |  \
+	        ...      ...      ...
 
 The tree graph is continously generated until a solution is found. This script does not check if the puzzle is solvable, so the program will continue to run until interrupted by the user.
 The code is organized into the following sections:
@@ -28,11 +28,17 @@ The code is organized into the following sections:
 This is where the user inputs the configuration of the puzzle they would like to solve. The puzzle must be inserted in list form, arranged in column-based format. Here is an example:
 
 <p>-----------
+	
 | 1 | 2 | 3 | 
+
 |-----------|
+
 | 4 | 5 | 6 | 
+
 |-----------|
+
 | 7 | 8 | 0 | 
+
 |-----------</p>
 
 The puzzle above in list form is:
