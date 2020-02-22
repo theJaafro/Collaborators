@@ -27,13 +27,13 @@ The code is organized into the following sections:
 
 This is where the user inputs the configuration of the puzzle they would like to solve. The puzzle must be inserted in list form, arranged in column-based format. Here is an example:
 
- -----------
-| 1 | 2 | 3 | 
-|-----------|
-| 4 | 5 | 6 | 
-|-----------|
-| 7 | 8 | 0 | 
- -----------
+	 -----------
+	| 1 | 2 | 3 | 
+	|-----------|
+	| 4 | 5 | 6 | 
+	|-----------|
+	| 7 | 8 | 0 | 
+	 -----------
 
 The puzzle above in list form is:
 [[1, 4, 7], [2, 5, 8], [3, 6, 0]]
