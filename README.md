@@ -228,3 +228,11 @@ When a solution is found, the path from the beginning to the end is printed in t
 
 1. The path from the abstract tree graph is captured in two text (.txt) files. "nodePath.txt" only records each step to solve the puzzle from beginning to end. Each new line represents the puzzle in a column-based format, where '1 4 7 2 5 8 3 6 0' is the goal. "NodesInfo.txt" records the numbered nodes from the tree graph that relate to the solving path. The first column contains the child nodes and the second column contains the parent nodes.
 2. The final path is expressed in a more visual-friendly way in the command line using the function print_matrix. The code for this printing method was provided by "plot_path.py" and has been copied into this script. 
+
+
+## Libraries
+The libraries imported for this project are:
+
+* __numpy__ - used when printing to the command line using the code copied from "plot_path.py"
+* __copy__ - used to make a deepcopy of the list that represents the puzzle when moving the blank tile
+* __os__ - creates the .txt files
