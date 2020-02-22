@@ -27,19 +27,13 @@ The code is organized into the following sections:
 
 This is where the user inputs the configuration of the puzzle they would like to solve. The puzzle must be inserted in list form, arranged in column-based format. Here is an example:
 
-<p>-----------
-	
+ -----------
 | 1 | 2 | 3 | 
-
 |-----------|
-
 | 4 | 5 | 6 | 
-
 |-----------|
-
 | 7 | 8 | 0 | 
-
-|-----------</p>
+ -----------
 
 The puzzle above in list form is:
 [[1, 4, 7], [2, 5, 8], [3, 6, 0]]
@@ -50,16 +44,16 @@ The puzzle shown in the example above is also the solution that the program is l
 
 This section lists all the functions that Jaad has made himself. They are all used to solve the 8-matrix puzzle.
 
-* BlankTileLocation - Locates the blank tile, or '0', in the list that represents the 8-matrix puzzle. Outputs the row and column as numbers from 1 thru 3.
-* ActionMoveLeft - If the blank tile is NOT in the first column, it is moved to the left by switching places with the number to the left of the blank tile. Outputs the list and variable stateChange. This variable stateChange returns 0 if the left move was not possible and the puzzle remains unchanged. Otherwise, the variable returns 1.
-* ActionMoveRight - Similar functionality to ActionMoveLeft, but moves the blank tile to the right, as long as the blank tile is NOT in the last column.
-* ActionMoveUp - Similar functionality to ActionMoveLeft, but moves the blank tile up, as long as the blank tile is NOT in the first row.
-* ActionMoveDown - Similar functionality to ActionMoveLeft, but moves the blank tile down, as long as the blank tile is NOT in the last row.
-* list2num - Converts the list that represents the puzzle into a single integer. This is to improve speed as the puzzle is being solved.
-* NewNode - Keeps track of all moves made while solving the puzzle. While solving, if the program encounters a configuration of the puzzle that was already investigated, it ignores that configuration and does NOT log it.
-* generatePath - Once the puzzle is solved, this function is used to generate the steps required to solve the puzzle.
-* printPath - Outputs two text files to the same folder path as the python script. "nodePath.txt" only records each step to solve the puzzle from beginning to end. Each new line represents the puzzle in a column-based format, where '1 4 7 2 5 8 3 6 0' is the goal. "NodesInfo.txt" records the numbered nodes from the tree graph that relate to the solving path. The first column contains the child nodes and the second column contains the parent nodes.
-* printNode - Outputs a text file that captures all the puzzle states explored while generating the tree graph. Each new line represents the puzzle in a column-based format, where '1 4 7 2 5 8 3 6 0' is the goal.
+* __BlankTileLocation__ - Locates the blank tile, or '0', in the list that represents the 8-matrix puzzle. Outputs the row and column as numbers from 1 thru 3.
+* __ActionMoveLeft__ - If the blank tile is NOT in the first column, it is moved to the left by switching places with the number to the left of the blank tile. Outputs the list and variable stateChange. This variable stateChange returns 0 if the left move was not possible and the puzzle remains unchanged. Otherwise, the variable returns 1.
+* __ActionMoveRight__ - Similar functionality to ActionMoveLeft, but moves the blank tile to the right, as long as the blank tile is NOT in the last column.
+* __ActionMoveUp__ - Similar functionality to ActionMoveLeft, but moves the blank tile up, as long as the blank tile is NOT in the first row.
+* __ActionMoveDown__ - Similar functionality to ActionMoveLeft, but moves the blank tile down, as long as the blank tile is NOT in the last row.
+* __list2num__ - Converts the list that represents the puzzle into a single integer. This is to improve speed as the puzzle is being solved.
+* __NewNode__ - Keeps track of all moves made while solving the puzzle. While solving, if the program encounters a configuration of the puzzle that was already investigated, it ignores that configuration and does NOT log it.
+* __generatePath__ - Once the puzzle is solved, this function is used to generate the steps required to solve the puzzle.
+* __printPath__ - Outputs two text files to the same folder path as the python script. "nodePath.txt" only records each step to solve the puzzle from beginning to end. Each new line represents the puzzle in a column-based format, where '1 4 7 2 5 8 3 6 0' is the goal. "NodesInfo.txt" records the numbered nodes from the tree graph that relate to the solving path. The first column contains the child nodes and the second column contains the parent nodes.
+* __printNode__ - Outputs a text file that captures all the puzzle states explored while generating the tree graph. Each new line represents the puzzle in a column-based format, where '1 4 7 2 5 8 3 6 0' is the goal.
 
 
 ## Section 3: Explore
@@ -187,6 +181,7 @@ This section moves the blank tile around in the puzzle and generates an abstract
 	-------------
 
 Here is an example if the program is trying to solve a potentially unsolvable puzzle and interrupted by the user:
+
 	NOW SOLVING FOR
 	[[[1, 5, 7], [8, 4, 6], [2, 3, 0]]]
 
